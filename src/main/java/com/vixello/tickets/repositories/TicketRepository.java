@@ -1,7 +1,6 @@
 package com.vixello.tickets.repositories;
 
 import com.vixello.tickets.domain.entities.Ticket;
-import com.vixello.tickets.domain.entities.TicketType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
