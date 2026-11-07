@@ -31,7 +31,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/vixello/Event-ticket-platform">
+  <a href="https://github.com/vixello/eventmaster">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -40,14 +40,14 @@
   <p align="center">
     project_description - An app for organisation/attending/staffing events
     <br />
-    <a href="https://github.com/vixello/Event-ticket-platform"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/vixello/eventmaster"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/vixello/Event-ticket-platform">View Demo</a>
+    <a href="https://github.com/vixello/eventmaster">View Demo</a>
     &middot;
-    <a href="https://github.com/vixello/Event-ticket-platform/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/vixello/eventmaster/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
-    <a href="https://github.com/vixello/Event-ticket-platform/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/vixello/eventmaster/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
 
@@ -85,7 +85,7 @@
 
 An Event Ticket Platform similar to Ticketmaster etc.
 
-Here's a blank template to get started. To avoid retyping too much info, do a search and replace with your text editor for the following: `vixello`, `Event-ticket-platform`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `Event Ticket Platform`, `project_description - An app for organisation/attending/staffing events`, `project_license`
+Here's a blank template to get started. To avoid retyping too much info, do a search and replace with your text editor for the following: `vixello`, `eventmaster`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `Event Ticket Platform`, `project_description - An app for organisation/attending/staffing events`, `project_license`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -125,7 +125,7 @@ This is an example of how to list things you need to use the software and how to
 To run the backend locally:
 1. Clone the repo
    ```sh
-   git clone https://github.com/vixello/Event-ticket-platform.git
+   git clone https://github.com/vixello/eventmaster.git
    ```
 2. Navigate to the backend project folder
    ```sh
@@ -162,7 +162,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [ ] Feature 3
     - [ ] Nested Feature
 
-See the [open issues](https://github.com/vixello/Event-ticket-platform/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/vixello/eventmaster/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -172,7 +172,7 @@ See the [open issues](https://github.com/vixello/Event-ticket-platform/issues) f
 
 Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
 
-Project Link: [https://github.com/vixello/Event-ticket-platform](https://github.com/vixello/Event-ticket-platform)
+Project Link: [https://github.com/vixello/eventmaster](https://github.com/vixello/eventmaster)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -180,16 +180,16 @@ Project Link: [https://github.com/vixello/Event-ticket-platform](https://github.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/vixello/Event-ticket-platform.svg?style=for-the-badge
-[contributors-url]: https://github.com/vixello/Event-ticket-platform/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/vixello/Event-ticket-platform.svg?style=for-the-badge
-[forks-url]: https://github.com/vixello/Event-ticket-platform/network/members
-[stars-shield]: https://img.shields.io/github/stars/vixello/Event-ticket-platform.svg?style=for-the-badge
-[stars-url]: https://github.com/vixello/Event-ticket-platform/stargazers
-[issues-shield]: https://img.shields.io/github/issues/vixello/Event-ticket-platform.svg?style=for-the-badge
-[issues-url]: https://github.com/vixello/Event-ticket-platform/issues
-[license-shield]: https://img.shields.io/github/license/vixello/Event-ticket-platform.svg?style=for-the-badge
-[license-url]: https://github.com/vixello/Event-ticket-platform/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/vixello/eventmaster.svg?style=for-the-badge
+[contributors-url]: https://github.com/vixello/eventmaster/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/vixello/eventmaster.svg?style=for-the-badge
+[forks-url]: https://github.com/vixello/eventmaster/network/members
+[stars-shield]: https://img.shields.io/github/stars/vixello/eventmaster.svg?style=for-the-badge
+[stars-url]: https://github.com/vixello/eventmaster/stargazers
+[issues-shield]: https://img.shields.io/github/issues/vixello/eventmaster.svg?style=for-the-badge
+[issues-url]: https://github.com/vixello/eventmaster/issues
+[license-shield]: https://img.shields.io/github/license/vixello/eventmaster.svg?style=for-the-badge
+[license-url]: https://github.com/vixello/eventmaster/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
