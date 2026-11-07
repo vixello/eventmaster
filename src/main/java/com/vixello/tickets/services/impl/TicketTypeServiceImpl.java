@@ -1,5 +1,6 @@
 package com.vixello.tickets.services.impl;
 
+import com.vixello.tickets.domain.dtos.PurchaseTicketTypeCartRequestDto;
 import com.vixello.tickets.domain.entities.Ticket;
 import com.vixello.tickets.domain.entities.TicketStatusEnum;
 import com.vixello.tickets.domain.entities.TicketType;
@@ -16,6 +17,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,30 +32,41 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     @Override
     @Transactional
-    public Ticket purchaseTicket(UUID userId, UUID ticketTypeId) {
+    public List<Ticket> purchaseTicketsCart(UUID userId, PurchaseTicketTypeCartRequestDto requestDto) {
+
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(
                 String.format("User with ID %s was not found", userId)
         ));
 
-        TicketType ticketType = ticketTypeRepository.findByIdWithLock(ticketTypeId).orElseThrow(() -> new TicketTypeNotFoundException(
-                String.format("Ticket type with ID %s was not found", ticketTypeId)
-        ));
+        List<Ticket> ticketsToSave = new ArrayList<>();
+        for(PurchaseTicketTypeCartRequestDto.CartItemDto ticketTypeItem : requestDto.getItems()){
+            TicketType ticketType = ticketTypeRepository.findByIdWithLock(ticketTypeItem.getTicketTypeId()).orElseThrow(() -> new TicketTypeNotFoundException(
+                    String.format("Ticket type with ID %s was not found", ticketTypeItem.getTicketTypeId())
+            ));
 
-        int purchasedTickets = ticketRepository.countByTicketTypeId(ticketTypeId);
-        Integer totalAvailable = ticketType.getTotalAvailable();
+            int purchasedTickets = ticketRepository.countByTicketTypeId(ticketTypeItem.getTicketTypeId());
+            Integer totalAvailable = ticketType.getTotalAvailable();
 
-        if(purchasedTickets + 1 > totalAvailable){
-            throw new TicketSoldOutException();
+            if(purchasedTickets + ticketTypeItem.getQuantity() > totalAvailable){
+                throw new TicketSoldOutException();
+            }
+
+            for(int i = 0; i <  ticketTypeItem.getQuantity(); i++){
+                Ticket ticket = new Ticket();
+                ticket.setStatus(TicketStatusEnum.PURCHASED);
+                ticket.setTicketType(ticketType);
+                ticket.setPurchaser(user);
+                ticketsToSave.add(ticket);
+            }
+
         }
 
-        Ticket ticket = new Ticket();
-        ticket.setStatus(TicketStatusEnum.PURCHASED);
-        ticket.setTicketType(ticketType);
-        ticket.setPurchaser(user);
+        List<Ticket> savedTickets = ticketRepository.saveAll(ticketsToSave);
 
-        Ticket savedTicket = ticketRepository.save(ticket);
-        qrCodeService.generateQrCode(savedTicket);
+        for(Ticket ticket : savedTickets){
+            qrCodeService.generateQrCode(ticket);
+        }
 
-        return ticketRepository.save(savedTicket);
+        return ticketRepository.saveAll(savedTickets);
     }
 }

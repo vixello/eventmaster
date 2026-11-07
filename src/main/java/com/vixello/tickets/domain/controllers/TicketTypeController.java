@@ -1,17 +1,19 @@
 package com.vixello.tickets.domain.controllers;
 
+import com.vixello.tickets.domain.dtos.PurchaseTicketTypeCartRequestDto;
+import com.vixello.tickets.domain.dtos.PurchaseTicketResponseDto;
+import com.vixello.tickets.domain.mappers.TicketMapper;
 import com.vixello.tickets.services.TicketTypeService;
 import com.vixello.tickets.util.JwtUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,16 +21,20 @@ import java.util.UUID;
 @RequestMapping(path = "/api/v1/events/{eventId}/ticket-types")
 public class TicketTypeController {
     private final TicketTypeService ticketTypeService;
+    private final TicketMapper ticketMapper;
 
-    @PostMapping(path = "/{ticketTypeId}/tickets")
-    public ResponseEntity<Void> purchaseTicket(
+    @PostMapping(path = "/purchases")
+    public ResponseEntity<List<PurchaseTicketResponseDto>> purchaseTicket(
             @AuthenticationPrincipal Jwt jwt,
-            @PathVariable UUID ticketTypeId
+            @Valid @RequestBody PurchaseTicketTypeCartRequestDto requestDto
             ){
 
         UUID userId = JwtUtil.parseUserId(jwt);
-        ticketTypeService.purchaseTicket(userId, ticketTypeId);
+        List<PurchaseTicketResponseDto> tickets = ticketTypeService.purchaseTicketsCart(userId, requestDto)
+                .stream().map(ticketMapper::toPurchaseTicketResponseDto)
+                .toList();
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(tickets, HttpStatus.CREATED);
     }
 }
