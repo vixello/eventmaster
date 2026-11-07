@@ -13,5 +13,5 @@ public class ListTicketTicketTypeResponseDto {
     private UUID id;
     private String name;
     private Double price;
-
+    private ListTicketTypeEventDetailsResponseDto event;
 }
