@@ -5,13 +5,19 @@ services:
       - "5432:5432"
     restart: always
     environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: prod!
+    networks:
+      - eventmaster-net
 
   adminer:
     image: adminer:latest
     restart: always
     ports:
       - "8888:8080"
+    networks:
+      - eventmaster-net
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -35,9 +41,16 @@ services:
 #  while developing a theme and re-enabling it in production.
     command:
       - start-dev
-      - --spi-theme--static-max-age=-1
-      - --spi-theme--cache-themes=false
-      - --spi-theme--cache-templates=false
+      - --spi-theme-static-max-age=-1
+      - --spi-theme-cache-themes=false
+      - --spi-theme-cache-templates=false
+    networks:
+      - eventmaster-net
+
 volumes:
   keycloak-data:
     driver: local
+
+networks:
+  eventmaster-net:
+    driver: bridge
