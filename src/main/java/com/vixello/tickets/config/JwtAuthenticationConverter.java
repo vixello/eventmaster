@@ -25,7 +25,7 @@ public class JwtAuthenticationConverter implements Converter<Jwt, JwtAuthenticat
     private Collection<GrantedAuthority> extractAuthorities(Jwt jwt){
         Map<String, Object> realmAccess = jwt.getClaim("realm_access");
 
-        if(realmAccess != null || !realmAccess.containsKey("roles")){
+        if(realmAccess == null || !realmAccess.containsKey("roles")){
             return Collections.emptyList();
         }
 
