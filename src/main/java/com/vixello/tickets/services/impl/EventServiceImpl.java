@@ -153,7 +153,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Event> searchPublishedEvents(String searchTerm, Pageable pageable) {
-        return eventRepository.searchEvents(searchTerm, pageable);
+    public Page<Event> searchPublishedEvents(String searchTerm, String dateFrom, String dateto, Pageable pageable) {
+        return eventRepository.searchEvents(searchTerm, dateFrom, dateto, pageable);
     }
 }

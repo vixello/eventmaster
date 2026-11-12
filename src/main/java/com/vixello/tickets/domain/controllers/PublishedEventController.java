@@ -25,17 +25,24 @@ public class PublishedEventController {
     @GetMapping
     public ResponseEntity<Page<ListPublishedEventResponseDto>> getPublishedEvents(
             @RequestParam(required = false, name = "searchTerm") String searchTerm,
+            @RequestParam(required = false, name = "dateFrom") String dateFrom,
+            @RequestParam(required = false, name = "dateTo") String dateTo,
             Pageable pageable){
 
-        Page<Event> events = null;
-        if(searchTerm != null  && !searchTerm.trim().isEmpty()){
-            events = eventService.searchPublishedEvents(searchTerm, pageable);
-        }
-        else{
+        System.out.println("DEBUG -> searchTerm: " + searchTerm + ", dateFrom: " + dateFrom + ", dateTo: " + dateTo);
+
+        boolean hasSearch = searchTerm != null && !searchTerm.trim().isEmpty();
+        boolean hasDateFrom = dateFrom != null && !dateFrom.trim().isEmpty();
+        boolean hasDateTo = dateTo != null && !dateTo.trim().isEmpty();
+
+        Page<Event> events;
+        if (hasSearch || hasDateFrom || hasDateTo) {
+            events = eventService.searchPublishedEvents(searchTerm, dateFrom, dateTo, pageable);
+        } else {
             events = eventService.listPublishedEvents(pageable);
         }
 
-       return ResponseEntity.ok(events.map(eventMapper::toListPublishedEventResponseDto));
+        return ResponseEntity.ok(events.map(eventMapper::toListPublishedEventResponseDto));
     }
 
     @GetMapping(path="/{eventId}")

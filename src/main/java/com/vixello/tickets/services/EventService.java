@@ -19,6 +19,6 @@ public interface EventService {
 
     Page<Event> listPublishedEvents(Pageable pageable);
     Optional<Event> getPublishedEvent(UUID eventId);
-    Page<Event> searchPublishedEvents(String query, Pageable pageable);
+    Page<Event> searchPublishedEvents(String searchTerm, String dateFrom, String dateTo, Pageable pageable);
 
 }

@@ -20,15 +20,18 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     Page<Event> findByStatus(EventStatusEnum status, Pageable pageable);
 
 
-    @Query(value = "SELECT * FROM events WHERE " +
-            "status = 'PUBLISHED' AND " +
-            "to_tsvector('english', COALESCE (name, '') || ' ' || COALESCE (venue, '')) " +
-            "@@ plainto_tsquery('english', :searchTerm)",
-            countQuery = "SELECT count(*) FROM events WHERE " +
-                    "status = 'PUBLISHED' AND " +
-                    "to_tsvector('english', COALESCE (name, '') || ' ' || COALESCE(venue, '')) "+
-                    "@@ plainto_tsquery('english', :searchTerm)",
+    @Query(value = "SELECT * FROM events WHERE status = 'PUBLISHED' " +
+            "AND (:searchTerm IS NULL OR (to_tsvector('english', COALESCE (name, '') || ' ' || COALESCE (venue, '')) @@ plainto_tsquery('english', :searchTerm))) " +
+            "AND (:dateFrom IS NULL OR event_start >= CAST(:dateFrom AS DATE)) " +
+            "AND (:dateTo IS NULL OR event_start < CAST(:dateTo AS DATE) + INTERVAL '1 day') ",
+            countQuery = "SELECT count(*) FROM events WHERE status = 'PUBLISHED' " +
+                    "AND (:searchTerm IS NULL OR (to_tsvector('english', COALESCE (name, '') || ' ' || COALESCE(venue, '')) @@ plainto_tsquery('english', :searchTerm))) " +
+                    "AND (:dateFrom IS NULL OR event_start >= CAST(:dateFrom AS DATE)) " +
+                    "AND (:dateTo IS NULL OR event_start < CAST(:dateTo AS DATE) + INTERVAL '1 day') ",
             nativeQuery = true)
-    Page<Event> searchEvents(@Param("searchTerm") String searchTerm, Pageable pageable);
+    Page<Event> searchEvents(@Param("searchTerm") String searchTerm,
+                             @Param("dateFrom") String dateFrom,
+                             @Param("dateTo") String dateTo,
+                             Pageable pageable);
     Optional<Event> findByIdAndStatus(UUID id, EventStatusEnum status);
 }
