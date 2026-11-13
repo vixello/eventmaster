@@ -1,9 +1,6 @@
 package com.vixello.tickets.domain.mappers;
 
-import com.vixello.tickets.domain.dtos.ListTicketResponseDto;
-import com.vixello.tickets.domain.dtos.ListTicketTicketTypeResponseDto;
-import com.vixello.tickets.domain.dtos.PurchaseTicketResponseDto;
-import com.vixello.tickets.domain.dtos.PurchaseTicketTypeResponseDto;
+import com.vixello.tickets.domain.dtos.*;
 import com.vixello.tickets.domain.entities.Ticket;
 import com.vixello.tickets.domain.entities.TicketType;
 import org.mapstruct.Mapper;
@@ -17,4 +14,7 @@ public interface TicketMapper {
 
     PurchaseTicketResponseDto toPurchaseTicketResponseDto(Ticket ticket);
     PurchaseTicketTypeResponseDto toPurchaseTicketTypeResponseDto(TicketType ticketType);
+
+    GetTicketResponseDto toGetTicketResponseDto(Ticket ticket);
+    GetTicketTicketTypeResponseDto toGetTicketTicketTypeResponseDto(TicketType ticketType);
 }
