@@ -5,23 +5,26 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.encoder.QRCode;
 import com.vixello.tickets.domain.entities.QrCode;
 import com.vixello.tickets.domain.entities.QrCodeStatusEnum;
 import com.vixello.tickets.domain.entities.Ticket;
 import com.vixello.tickets.exceptions.QrCodeGenerationException;
+import com.vixello.tickets.exceptions.QrCodeNotFoundException;
 import com.vixello.tickets.repositories.QrCodeRepository;
 import com.vixello.tickets.services.QrCodeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QrCodeServiceImpl implements QrCodeService {
@@ -49,6 +52,20 @@ public class QrCodeServiceImpl implements QrCodeService {
         catch (WriterException | IOException ex){
             throw new QrCodeGenerationException("Failed to generate QR Code", ex);
         }
+    }
+
+    @Override
+    public byte[] getQrCodeImageForUserAndTicket(UUID userId, UUID ticketId) {
+       QrCode qrCode = qrCodeRepository.findByTicketIdAndPurchaserId(ticketId, userId)
+               .orElseThrow(QrCodeNotFoundException::new);
+
+       try{
+           return Base64.getDecoder().decode(qrCode.getValue());
+       }
+       catch (IllegalArgumentException ex){
+           log.error("Invalid base64 QR code for ticket ID: {}", ticketId, ex);
+            throw new QrCodeNotFoundException();
+       }
     }
 
     private String generateQrCodeImage(UUID uniqueId) throws WriterException, IOException {
