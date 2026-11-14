@@ -28,7 +28,7 @@ import java.util.UUID;
 public class TicketController {
     private final TicketService ticketService;
     private final TicketMapper ticketMapper;
-    private final QrCodeService qrCodeServicer;
+    private final QrCodeService qrCodeService;
 
     @GetMapping
     public Page<ListTicketResponseDto> listTickets(
@@ -60,7 +60,7 @@ public class TicketController {
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable UUID ticketId
     ){
-        byte[] qrCodeImageForUserAndTicket = qrCodeServicer.getQrCodeImageForUserAndTicket(JwtUtil.parseUserId(jwt), ticketId);
+        byte[] qrCodeImageForUserAndTicket = qrCodeService.getQrCodeImageForUserAndTicket(JwtUtil.parseUserId(jwt), ticketId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);

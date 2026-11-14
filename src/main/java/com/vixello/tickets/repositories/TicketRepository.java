@@ -29,7 +29,7 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
             "JOIN FETCH t.ticketType tt " +
             "JOIN FETCH tt.event e " +
             "WHERE t.purchaser.id = :purchaserId " +
-            "AND t.id = :id",
+            "AND t.id = :ticketId",
             countQuery = "SELECT count(t) FROM Ticket t " +
                     "WHERE t.purchaser.id = :purchaserId " +
                     "AND t.id = :ticketId"
