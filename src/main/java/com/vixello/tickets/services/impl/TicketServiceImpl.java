@@ -22,7 +22,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Optional<Ticket> getTicketForUser(UUID ticketId, UUID purchaserId, Pageable pageable) {
+    public Optional<Ticket> getTicketForUser(UUID ticketId, UUID purchaserId) {
         return ticketRepository.findByIdAndPurchaserId(ticketId, purchaserId);
     }
 }
