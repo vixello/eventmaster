@@ -9,5 +9,5 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class TicketValidationMapper {
     @Mapping(target = "ticketId", source = "ticket.id")
-    abstract TicketValidationResponseDto toTicketValidationResponseDto(TicketValidation ticketValidation);
+    public abstract TicketValidationResponseDto toTicketValidationResponseDto(TicketValidation ticketValidation);
 }
