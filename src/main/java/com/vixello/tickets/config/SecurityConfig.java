@@ -49,6 +49,13 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userAuthoritiesMapper(userAuthoritiesMapper())))
                 .oauth2Client(Customizer.withDefaults())
+                .logout(logout -> logout
+                        .logoutUrl("/api/v1/auth/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                )
+
                 //.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))
                 .addFilterAfter(userProvisioningFilter, BearerTokenAuthenticationFilter.class);
 
