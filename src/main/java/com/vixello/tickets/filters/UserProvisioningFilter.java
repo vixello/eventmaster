@@ -6,10 +6,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,24 +25,29 @@ public class UserProvisioningFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
         if(authentication != null 
                 && authentication.isAuthenticated() 
-                && authentication.getPrincipal() instanceof Jwt jwt){
+                && authentication.getPrincipal() instanceof OidcUser oidcUser){
 
-            UUID keycloakId = UUID.fromString(jwt.getSubject());
+            String subject = oidcUser.getSubject();
 
+            if (subject == null || subject.isBlank()) {
+                throw new IllegalStateException("OIDC subject (sub) is missing");
+            }
+
+            UUID keycloakId = UUID.fromString(subject);
             if(!userRepository.existsById(keycloakId)){
                 User user = new User();
 
                 user.setId(keycloakId);
-                user.setName(jwt.getClaimAsString("preferred_username"));
-                user.setEmail(jwt.getClaimAsString("email"));
+                user.setName(oidcUser.getPreferredUsername());
+                user.setEmail(oidcUser.getEmail());
 
                 userRepository.save(user);
             }
