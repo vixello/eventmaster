@@ -4,12 +4,13 @@ import com.vixello.tickets.domain.dtos.PurchaseTicketTypeCartRequestDto;
 import com.vixello.tickets.domain.dtos.PurchaseTicketResponseDto;
 import com.vixello.tickets.domain.mappers.TicketMapper;
 import com.vixello.tickets.services.TicketTypeService;
-import com.vixello.tickets.util.JwtUtil;
+import com.vixello.tickets.util.UserUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,11 +26,11 @@ public class TicketTypeController {
 
     @PostMapping(path = "/purchases")
     public ResponseEntity<List<PurchaseTicketResponseDto>> purchaseTicket(
-            @AuthenticationPrincipal Jwt jwt,
+            @AuthenticationPrincipal OidcUser oidcUser,
             @Valid @RequestBody PurchaseTicketTypeCartRequestDto requestDto
             ){
 
-        UUID userId = JwtUtil.parseUserId(jwt);
+        UUID userId = UserUtil.parseUserId(oidcUser);
         List<PurchaseTicketResponseDto> tickets = ticketTypeService.purchaseTicketsCart(userId, requestDto)
                 .stream().map(ticketMapper::toPurchaseTicketResponseDto)
                 .toList();
