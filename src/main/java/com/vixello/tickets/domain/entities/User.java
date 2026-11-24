@@ -23,27 +23,31 @@ public class User {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Column(name = "keycloak_id", nullable = false, unique = true)
+    private String keycloakId;
+
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "email", nullable = false)
     private String email;
 
-    // implement soft delete later for cascade
-    @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
-    private List<Event> organizedEvents = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organizer_id")
+    private Organizer organizer;
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
+        return Objects.equals(id, user.id) && Objects.equals(keycloakId, user.keycloakId) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(organizer, user.organizer) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, createdAt, updatedAt);
+        return Objects.hash(id, keycloakId, name, email, organizer, createdAt, updatedAt);
     }
 
     @ManyToMany()
