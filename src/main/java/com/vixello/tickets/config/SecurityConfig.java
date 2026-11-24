@@ -31,8 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/oauth2/**",
-                                "/login/**",
-                                "/api/v1/auth/**"
+                                "/login/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/published-events/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/auth/current-user").authenticated()
