@@ -6,6 +6,7 @@ import com.vixello.tickets.domain.entities.TicketValidation;
 import com.vixello.tickets.domain.entities.TicketValidationMethod;
 import com.vixello.tickets.domain.mappers.TicketValidationMapper;
 import com.vixello.tickets.services.TicketValidationService;
+import com.vixello.tickets.services.UserService;
 import com.vixello.tickets.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,6 @@ public class TicketValidationController {
             @RequestBody TicketValidationRequestDto ticketValidationRequestDto
             ){
 
-        UUID userId = UserUtil.parseUserId(oidcUser);
         TicketValidationMethod method = ticketValidationRequestDto.getMethod();
         TicketValidation ticketValidation;
 
