@@ -4,6 +4,7 @@ import com.vixello.tickets.domain.dtos.PurchaseTicketTypeCartRequestDto;
 import com.vixello.tickets.domain.dtos.PurchaseTicketResponseDto;
 import com.vixello.tickets.domain.mappers.TicketMapper;
 import com.vixello.tickets.services.TicketTypeService;
+import com.vixello.tickets.services.UserService;
 import com.vixello.tickets.util.UserUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class TicketTypeController {
     private final TicketTypeService ticketTypeService;
     private final TicketMapper ticketMapper;
+    private final UserService userService;
 
     @PostMapping(path = "/purchases")
     public ResponseEntity<List<PurchaseTicketResponseDto>> purchaseTicket(
@@ -30,7 +32,8 @@ public class TicketTypeController {
             @Valid @RequestBody PurchaseTicketTypeCartRequestDto requestDto
             ){
 
-        UUID userId = UserUtil.parseUserId(oidcUser);
+        UUID userId = userService.getLocalUserId(oidcUser);
+
         List<PurchaseTicketResponseDto> tickets = ticketTypeService.purchaseTicketsCart(userId, requestDto)
                 .stream().map(ticketMapper::toPurchaseTicketResponseDto)
                 .toList();
