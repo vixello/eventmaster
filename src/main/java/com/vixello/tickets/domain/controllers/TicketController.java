@@ -5,6 +5,7 @@ import com.vixello.tickets.domain.dtos.ListTicketResponseDto;
 import com.vixello.tickets.domain.mappers.TicketMapper;
 import com.vixello.tickets.services.QrCodeService;
 import com.vixello.tickets.services.TicketService;
+import com.vixello.tickets.services.UserService;
 import com.vixello.tickets.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,13 +30,14 @@ public class TicketController {
     private final TicketService ticketService;
     private final TicketMapper ticketMapper;
     private final QrCodeService qrCodeService;
+    private final UserService userService;
 
     @GetMapping
     public Page<ListTicketResponseDto> listTickets(
             @AuthenticationPrincipal OidcUser oidcUser,
             Pageable pageable
             ){
-        UUID userId = UserUtil.parseUserId(oidcUser);
+        UUID userId = userService.getLocalUserId(oidcUser);
 
         return ticketService.listTicketsForUser(userId, pageable)
                             .map(ticketMapper::toListTicketResponseDto);
@@ -46,7 +48,7 @@ public class TicketController {
             @AuthenticationPrincipal OidcUser oidcUser,
             @PathVariable UUID ticketId
     ){
-        UUID userId = UserUtil.parseUserId(oidcUser);
+        UUID userId = userService.getLocalUserId(oidcUser);
 
         return ticketService.getTicketForUser(ticketId, userId)
                 .map(ticketMapper::toGetTicketResponseDto)
