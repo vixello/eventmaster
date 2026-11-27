@@ -6,6 +6,7 @@ import com.vixello.tickets.domain.dtos.*;
 import com.vixello.tickets.domain.entities.Event;
 import com.vixello.tickets.domain.mappers.EventMapper;
 import com.vixello.tickets.services.EventService;
+import com.vixello.tickets.services.UserService;
 import com.vixello.tickets.util.UserUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,8 @@ import java.util.UUID;
 public class EventController {
     private final EventMapper eventMapper;
     private final EventService eventService;
+    private final UserService userService;
+
 
     @PostMapping
     public ResponseEntity<CreateEventResponseDto> createEvent(
@@ -32,7 +35,8 @@ public class EventController {
             @Valid @RequestBody CreateEventRequestDto createEventRequestDto
             ){
         CreateEventRequest createEventRequest = eventMapper.fromDto(createEventRequestDto);
-        UUID userId = UserUtil.parseUserId(oidcUser);
+
+        UUID userId = userService.getLocalUserId(oidcUser);
 
         Event createdEvent = eventService.createEvent(userId, createEventRequest);
         CreateEventResponseDto createdEventResponseDto = eventMapper.toDto(createdEvent);
@@ -41,15 +45,15 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<Page<ListEventResponseDto>> listEvents(@AuthenticationPrincipal OidcUser oidcUser, Pageable pageable){
-        UUID organizerId = UserUtil.parseUserId(oidcUser);
+        UUID userId = userService.getLocalUserId(oidcUser);
 
-        Page<Event> events = eventService.listEventForOrganizer(organizerId, pageable);
+        Page<Event> events = eventService.listEventForOrganizer(userId, pageable);
         return ResponseEntity.ok(events.map(eventMapper::toListEventResponseDto));
     }
 
     @GetMapping(path = "/{eventId}")
     public ResponseEntity<GetEventDetailsResponseDto> getEvent(@AuthenticationPrincipal OidcUser  oidcUser, @PathVariable UUID eventId){
-        UUID userId = UserUtil.parseUserId(oidcUser);
+        UUID userId = userService.getLocalUserId(oidcUser);
 
         return eventService.getEventByOrganizer(userId, eventId)
                 .map(eventMapper::toGetEventDetailsResponseDto)
@@ -62,7 +66,7 @@ public class EventController {
                                                               @PathVariable UUID eventId,
                                                               @Valid @RequestBody UpdateEventRequestDto updateEventRequestDto
                                                               ){
-        UUID userId = UserUtil.parseUserId(oidcUser);
+        UUID userId = userService.getLocalUserId(oidcUser);
 
         UpdateEventRequest updateEventRequest = eventMapper.fromDto(updateEventRequestDto);
         Event updatedEvent = eventService.updateEventForOrganizer(userId, eventId, updateEventRequest);
@@ -73,8 +77,8 @@ public class EventController {
     }
 
     @DeleteMapping(path = "/{eventId}")
-    public ResponseEntity deleteEvent(@AuthenticationPrincipal OidcUser  oidcUser, @PathVariable UUID eventId){
-        UUID userId = UserUtil.parseUserId(oidcUser);
+    public ResponseEntity<Void> deleteEvent(@AuthenticationPrincipal OidcUser  oidcUser, @PathVariable UUID eventId){
+        UUID userId = userService.getLocalUserId(oidcUser);
 
         eventService.deleteEventForOrganizer(userId, eventId);
         return ResponseEntity.noContent().build();
