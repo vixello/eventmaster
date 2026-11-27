@@ -35,22 +35,25 @@ public class UserProvisioningFilter extends OncePerRequestFilter {
                 && authentication.isAuthenticated() 
                 && authentication.getPrincipal() instanceof OidcUser oidcUser){
 
-            String subject = oidcUser.getSubject();
 
-            if (subject == null || subject.isBlank()) {
+            String keycloakId = oidcUser.getSubject();
+
+            if (keycloakId == null || keycloakId.isBlank()) {
                 throw new IllegalStateException("OIDC subject (sub) is missing");
             }
 
-            UUID keycloakId = UUID.fromString(subject);
-            if(!userRepository.existsById(keycloakId)){
-                User user = new User();
+            userRepository.findByKeycloakId(keycloakId)
+                    .orElseGet(() -> {
+                        User user = new User();
 
-                user.setId(keycloakId);
-                user.setName(oidcUser.getPreferredUsername());
-                user.setEmail(oidcUser.getEmail());
+                        user.setId(UUID.randomUUID());
+                        user.setKeycloakId(keycloakId);
+                        user.setName(oidcUser.getPreferredUsername());
+                        user.setEmail(oidcUser.getEmail());
 
-                userRepository.save(user);
-            }
+
+                        return userRepository.save(user);
+                    });
         }
 
         filterChain.doFilter(request,response);
