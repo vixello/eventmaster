@@ -35,7 +35,10 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/published-events/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/auth/current-user").authenticated()
-                        .requestMatchers("/api/v1/events").hasRole("ORGANIZER")
+                        .requestMatchers(
+                      "/api/v1/events",
+                                "/api/v1/events/**"
+                        ).hasRole("ORGANIZER")
                         .requestMatchers("/api/v1/ticket-validation").hasRole("STAFF")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())
